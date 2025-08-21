@@ -1,17 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { Error as MongooseError } from 'mongoose';
 import { StatusCodes } from '../utils/http';
+import BaseAppError from '../errors/BaseAppError';
 
-export class NotFoundError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = 'ObjectNotFoundError';
-  }
-}
-
-const errorHandler = (err: Error, _req: Request, res: Response, _next: NextFunction) => {
-  if (err instanceof NotFoundError) {
-    return res.status(StatusCodes.NOT_FOUND).send({ message: err.message });
+const errorHandler = (err: BaseAppError, _req: Request, res: Response, _next: NextFunction) => {
+  if (err instanceof BaseAppError && err.statusCode) {
+    return res.status(err.statusCode).send({ message: err.message });
   }
 
   if (err instanceof MongooseError.ValidationError) {

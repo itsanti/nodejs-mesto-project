@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Card, ICard } from '../models';
-import { NotFoundError } from '../middlewares/errorHandler';
+import { NotFoundError } from '../errors';
 
 const CardNotFoundMessage = 'Запрашиваемая карточка не найдена';
 
