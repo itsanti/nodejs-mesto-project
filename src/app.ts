@@ -5,6 +5,7 @@ import { errorHandler, authMiddleware } from './middlewares';
 import { publicRouter, userRouter, cardRouter } from './routes';
 import { PORT, DB_NAME } from './config';
 import { NotFoundError } from './errors';
+import { requestLogger, errorLogger } from './utils/logger';
 
 const app = express();
 
@@ -12,6 +13,7 @@ mongoose.connect(`mongodb://localhost:27017/${DB_NAME}`);
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(requestLogger);
 
 app.use(publicRouter);
 app.use(authMiddleware);
@@ -20,6 +22,7 @@ app.use('/cards', cardRouter);
 
 app.use('*', (_req: Request, _res: Response, next: NextFunction) => next(new NotFoundError('Страница не найдена')));
 
+app.use(errorLogger);
 app.use(errorHandler);
 
 app.listen(PORT, () => {
