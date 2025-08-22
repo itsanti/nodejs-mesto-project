@@ -43,7 +43,7 @@ export const likeCard = (
 ) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: res.locals.user._id } },
-  { new: true },
+  { new: true, runValidators: true },
 ).orFail(new NotFoundError(CardNotFoundMessage))
   .then((card) => res.send(card))
   .catch(next);
@@ -55,7 +55,7 @@ export const dislikeCard = (
 ) => Card.findByIdAndUpdate(
   req.params.cardId,
   { $pull: { likes: res.locals.user._id } },
-  { new: true },
+  { new: true, runValidators: true },
 ).orFail(new NotFoundError(CardNotFoundMessage))
   .then((card) => res.send(card))
   .catch(next);

@@ -71,7 +71,7 @@ export const patchUser = async (req: Request, res: Response, next: NextFunction)
   const { name, about } = req.body;
   const userId = res.locals.user._id;
 
-  return User.findByIdAndUpdate(userId, { name, about }, { new: true })
+  return User.findByIdAndUpdate(userId, { name, about }, { new: true, runValidators: true })
     .orFail(new NotFoundError(UserNotFoundMessage))
     .then((user) => res.send(user))
     .catch(next);
@@ -81,7 +81,7 @@ export const patchUserAvatar = async (req: Request, res: Response, next: NextFun
   const { avatar } = req.body;
   const userId = res.locals.user._id;
 
-  return User.findByIdAndUpdate(userId, { avatar }, { new: true })
+  return User.findByIdAndUpdate(userId, { avatar }, { new: true, runValidators: true })
     .orFail(new NotFoundError(UserNotFoundMessage))
     .then((user) => res.send(user))
     .catch(next);

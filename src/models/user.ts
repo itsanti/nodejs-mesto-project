@@ -40,6 +40,10 @@ const userSchema = new Schema<IUser>({
     type: String,
     required: true,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
+    validate: {
+      validator: (value: string) => validator.isURL(value),
+      message: 'Некорректная ссылка на аватар',
+    },
   },
   email: {
     type: String,
