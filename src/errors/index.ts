@@ -1,7 +1,9 @@
-import NotFoundError from './NotFoundError';
 import UnauthorizedError from './UnauthorizedError';
+import ForbiddenError from './ForbiddenError';
+import NotFoundError from './NotFoundError';
 
 export {
-  NotFoundError,
   UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
 };

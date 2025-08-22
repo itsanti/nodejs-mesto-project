@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import { Card, ICard } from '../models';
-import { NotFoundError } from '../errors';
+import { NotFoundError, ForbiddenError } from '../errors';
 
 const CardNotFoundMessage = 'Запрашиваемая карточка не найдена';
 
@@ -12,12 +12,18 @@ export const deleteCardById = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => Card.findByIdAndDelete(
+) => Card.findById(
   req.params.cardId,
-)
+).orFail(new NotFoundError(CardNotFoundMessage))
   .then((card) => {
-    if (!card) return next(new NotFoundError(CardNotFoundMessage));
-    return res.send(card);
+    if (card.owner.toString() !== res.locals?.user?._id) {
+      return Promise.reject(new ForbiddenError('Нельзя удалить чужую карточку'));
+    }
+    return card;
+  })
+  .then((card) => {
+    card.delete();
+    res.send(card);
   })
   .catch(next);
 
