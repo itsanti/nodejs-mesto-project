@@ -1,6 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import { errors } from 'celebrate';
 import { errorHandler, authMiddleware } from './middlewares';
 import { publicRouter, userRouter, cardRouter } from './routes';
 import { PORT, DB_NAME } from './config';
@@ -22,6 +23,7 @@ app.use('/cards', cardRouter);
 
 app.use('*', (_req: Request, _res: Response, next: NextFunction) => next(new NotFoundError('Страница не найдена')));
 
+app.use(errors());
 app.use(errorLogger);
 app.use(errorHandler);
 
