@@ -44,11 +44,8 @@ export const likeCard = (
   req.params.cardId,
   { $addToSet: { likes: res.locals.user._id } },
   { new: true },
-)
-  .then((card) => {
-    if (!card) return next(new NotFoundError(CardNotFoundMessage));
-    return res.send(card);
-  })
+).orFail(new NotFoundError(CardNotFoundMessage))
+  .then((card) => res.send(card))
   .catch(next);
 
 export const dislikeCard = (
@@ -59,9 +56,6 @@ export const dislikeCard = (
   req.params.cardId,
   { $pull: { likes: res.locals.user._id } },
   { new: true },
-)
-  .then((card) => {
-    if (!card) return next(new NotFoundError(CardNotFoundMessage));
-    return res.send(card);
-  })
+).orFail(new NotFoundError(CardNotFoundMessage))
+  .then((card) => res.send(card))
   .catch(next);

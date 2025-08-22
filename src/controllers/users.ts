@@ -33,7 +33,7 @@ export const getUserInfo = async (_req: Request, res: Response, next: NextFuncti
     if (!userId) {
       throw new UnauthorizedError();
     }
-    const user = await User.findById(userId).orFail(new NotFoundError('Пользователь не найден'));
+    const user = await User.findById(userId).orFail(new NotFoundError(UserNotFoundMessage));
     res.send(user);
   } catch (error) {
     next(error);
@@ -49,10 +49,8 @@ export const getUserById = (
   res: Response,
   next: NextFunction,
 ) => User.findById(req.params.userId)
-  .then((user) => {
-    if (!user) return next(new NotFoundError(UserNotFoundMessage));
-    return res.send(user);
-  })
+  .orFail(new NotFoundError(UserNotFoundMessage))
+  .then((user) => res.send(user))
   .catch(next);
 
 export const createUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -74,10 +72,8 @@ export const patchUser = async (req: Request, res: Response, next: NextFunction)
   const userId = res.locals.user._id;
 
   return User.findByIdAndUpdate(userId, { name, about }, { new: true })
-    .then((user) => {
-      if (!user) return next(new NotFoundError(UserNotFoundMessage));
-      return res.send(user);
-    })
+    .orFail(new NotFoundError(UserNotFoundMessage))
+    .then((user) => res.send(user))
     .catch(next);
 };
 
@@ -86,9 +82,7 @@ export const patchUserAvatar = async (req: Request, res: Response, next: NextFun
   const userId = res.locals.user._id;
 
   return User.findByIdAndUpdate(userId, { avatar }, { new: true })
-    .then((user) => {
-      if (!user) return next(new NotFoundError(UserNotFoundMessage));
-      return res.send(user);
-    })
+    .orFail(new NotFoundError(UserNotFoundMessage))
+    .then((user) => res.send(user))
     .catch(next);
 };
