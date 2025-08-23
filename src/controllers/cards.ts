@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Card, ICard } from '../models';
 import { NotFoundError, ForbiddenError } from '../errors';
+import { StatusCodes } from '../utils/http';
 
 const CardNotFoundMessage = 'Запрашиваемая карточка не найдена';
 
@@ -32,7 +33,7 @@ export const createCard = async (req: Request, res: Response, next: NextFunction
   const owner = res.locals.user._id;
 
   return Card.create<Partial<ICard>>({ name, link, owner })
-    .then((card) => res.send(card))
+    .then((card) => res.status(StatusCodes.CREATED).send(card))
     .catch(next);
 };
 

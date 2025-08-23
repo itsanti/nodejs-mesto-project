@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import { StatusCodes } from '../utils/http';
 import { NotFoundError, UnauthorizedError } from '../errors';
 import { User, IUser } from '../models';
 import { JWT_SECRET } from '../config';
@@ -63,7 +64,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
   return User.create<IUser>({
     name, about, avatar, email, password: passwordHash,
   })
-    .then((user) => res.send(user))
+    .then((user) => res.status(StatusCodes.CREATED).send(user))
     .catch(next);
 };
 

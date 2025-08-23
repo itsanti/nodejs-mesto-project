@@ -78,4 +78,12 @@ const userSchema = new Schema<IUser>({
   },
 });
 
+userSchema.set('toJSON', {
+  transform: (_doc, ret) => {
+    /* eslint-disable no-param-reassign */
+    delete ret.password;
+    return ret;
+  },
+});
+
 export default model<IUser, IUserModel>('user', userSchema);
